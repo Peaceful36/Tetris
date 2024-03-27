@@ -47,7 +47,7 @@ main:
     # initialize the loop variables $t5, $t6
 add $t5, $zero, $zero	# set $t5 to zero
 addi $t6, $zero, 20
-lw $t1, GREY
+lw $t1, dark_grey
 lw $t0, ADDR_DSPL
 
 draw_walls_sides:
@@ -79,7 +79,7 @@ j draw_wall_bottom
 init_draw_grid:
 add $t5, $zero, $zero	# set $t5 to zero
 addi $t6, $zero, 5
-lw $t1, dark_grey
+lw $t1, GREY
 lw $t0, ADDR_DSPL
 addi $t2, $zero, 19 # change this line to change grid height 
 addi $t3, $zero, 0
@@ -101,7 +101,7 @@ b draw_grid2
 draw_grid1: # a line of the grid
 beq $t5, $t6, to_next_line
 addi $t0, $t0, 4
-sw $zero, 0($t0)
+sw $t1, 0($t0)
 addi $t0, $t0, 4
 sw $t1, 0($t0) 
 addi $t5, $t5, 1
@@ -112,7 +112,7 @@ beq $t5, $t6, to_next_line
 addi $t0, $t0, 4
 sw $t1, 0($t0)
 addi $t0, $t0, 4
-sw $zero, 0($t0) 
+sw $t1, 0($t0) 
 addi $t5, $t5, 1
 j draw_grid2
 
@@ -179,16 +179,52 @@ keyboard_input:
     beq $t7, 113, qkey
 
 wkey:
-    
+
     j keyboard
 akey:
-    
+    lw $t0, GREY
+    sw $t0, 0($t2)
+    sw $t0, 0($t3)
+    sw $t0, 0($t4)
+    sw $t0, 0($t5)
+    addi $t2, $t2, -4
+    addi $t3, $t3, -4
+    addi $t4, $t4, -4
+    addi $t5, $t5, -4
+    sw $t1, 0($t2)
+    sw $t1, 0($t3)
+    sw $t1, 0($t4)
+    sw $t1, 0($t5)
     j keyboard
 skey:
-    
+    lw $t0, GREY
+    sw $t0, 0($t2)
+    sw $t0, 0($t3)
+    sw $t0, 0($t4)
+    sw $t0, 0($t5)
+    addi $t2, $t2, 128
+    addi $t3, $t3, 128
+    addi $t4, $t4, 128
+    addi $t5, $t5, 128
+    sw $t1, 0($t2)
+    sw $t1, 0($t3)
+    sw $t1, 0($t4)
+    sw $t1, 0($t5)
     j keyboard
 dkey:
-
+    lw $t0, GREY
+    sw $t0, 0($t2)
+    sw $t0, 0($t3)
+    sw $t0, 0($t4)
+    sw $t0, 0($t5)
+    addi $t2, $t2, 4
+    addi $t3, $t3, 4
+    addi $t4, $t4, 4
+    addi $t5, $t5, 4
+    sw $t1, 0($t2)
+    sw $t1, 0($t3)
+    sw $t1, 0($t4)
+    sw $t1, 0($t5)
     j keyboard
 qkey:
     j Exit
@@ -197,72 +233,96 @@ draw_O:
     lw $t1, YELLOW
     lw $t0, ADDR_DSPL
     addi $t0, $t0, 20
+    add $t2, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 4
+    add $t3, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 124
+    add $t4, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 4
+    add $t5, $zero, $t0
     sw $t1, 0($t0)
     j keyboard
 draw_S:
     lw $t1, RED
     lw $t0, ADDR_DSPL
     addi $t0, $t0, 20
+    add $t2, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 4
+    add $t3, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 120
+    add $t4, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 4
+    add $t5, $zero, $t0
     sw $t1, 0($t0)
     j keyboard
 draw_I:
     lw $t1, BLUE
     lw $t0, ADDR_DSPL
     addi $t0, $t0, 20
+    add $t2, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 128
+    add $t3, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 128
+    add $t4, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 128
+    add $t5, $zero, $t0
     sw $t1, 0($t0)
     j keyboard
 draw_Z:
     lw $t1, GREEN
     lw $t0, ADDR_DSPL
     addi $t0, $t0, 20
+    add $t2, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 4
+    add $t3, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 128
+    add $t4, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 4
+    add $t5, $zero, $t0
     sw $t1, 0($t0)
     j keyboard
 draw_L:
     lw $t1, ORANGE
     lw $t0, ADDR_DSPL
     addi $t0, $t0, 20
+    add $t2, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 128
+    add $t3, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 128
+    add $t4, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 4
+    add $t5, $zero, $t0
     sw $t1, 0($t0)
     j keyboard
 draw_J:
     lw $t1, GREY
     lw $t0, ADDR_DSPL
     addi $t0, $t0, 20
+    add $t2, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 128
+    add $t3, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 124
+    add $t4, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 4
+    add $t5, $zero, $t0
     sw $t1, 0($t0)
     j game_loop
     
@@ -270,12 +330,16 @@ draw_T:
     lw $t1, PURPLE
     lw $t0, ADDR_DSPL
     addi $t0, $t0, 16
+    add $t2, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 4
+    add $t3, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 4
+    add $t4, $zero, $t0
     sw $t1, 0($t0)
     addi $t0, $t0, 124
+    add $t5, $zero, $t0
     sw $t1, 0($t0)
     j game_loop
     
