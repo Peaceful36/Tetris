@@ -117,7 +117,6 @@ sw $zero, 0($t0)
 addi $t5, $t5, 1
 j draw_grid2
 
-
 game_loop:
 
     li $v0, 42 #Load random integer from 0 to 6
@@ -183,6 +182,20 @@ wkey:
 
     j keyboard
 akey:
+    add $t7, $zero, $zero # set t7 to 0 and randomly load piece
+    beq $a0, $t7, a0
+    addi $t7, $t7, 1 
+    beq $a0, $t7, a1
+    addi $t7, $t7, 1
+    beq $a0, $t7, a2
+    addi $t7, $t7, 1
+    beq $a0, $t7, a3
+    addi $t7, $t7, 1
+    beq $a0, $t7, a4
+    addi $t7, $t7, 1
+    beq $a0, $t7, a5
+    addi $t7, $t7, 1
+    beq $a0, $t7, a6
     
     update_a:
         lw $t0, dark_grey
@@ -225,7 +238,131 @@ akey:
         sw $t1, 0($t4)
         sw $t1, 0($t5)
         j keyboard
+        
+collision_a1:
+    lw $a1, 0($sp)
+    addi $sp, $sp, 4
+    lw $t0, dark_grey
+    lw $t7, -4($a1)
+    beq $t7, $zero, successa
+    beq $t7, $t0, successa
+    j faila
+collision_a2:
+    lw $a1, 0($sp)
+    addi $sp, $sp, 4
+    lw $a2, 0($sp)
+    addi $sp, $sp, 4
+    lw $t0, dark_grey
+    lw $t7, -4($a1)
+    beq $t7, $zero, ifa2
+    bne $t7, $t0, faila
+    ifa2:
+        lw $t7, -4($a2)
+        beq $t7, $zero, successa
+        beq $t7, $t0, successa
+        j faila
+collision_a3:
+    lw $a1, 0($sp)
+    addi $sp, $sp, 4
+    lw $a2, 0($sp)
+    addi $sp, $sp, 4
+    lw $a3, 0($sp)
+    addi $sp, $sp, 4
+    lw $t0, dark_grey
+    lw $t7, -4($a1)
+    beq $t7, $zero, ifa3
+    bne $t7, $t0, faila
+    ifa3:
+        lw $t7, -4($a2)
+        beq $t7, $zero, L1
+        bne $t7, $t0, faila
+    L1:
+        lw $t7, -4($a3)
+        beq $t7, $zero, successa
+        beq $t7, $t0, successa
+        j faila
+    
+a0:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    addi $sp, $sp, -4
+    sw $t4, 0($sp)
+    jal collision_a2
+    
+a1:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    addi $sp, $sp, -4
+    sw $t4, 0($sp)
+    jal collision_a2
+a2:
+    lw $t0, dark_grey
+    lw $t7, -4($t2)
+    beq $t7, $zero, ifa4
+    bne $t7, $t0, faila
+    ifa4:
+        lw $t7, -4($t3)
+        beq $t7, $zero, L2
+        bne $t7, $t0, faila
+    L2:
+        lw $t7, -4($t4)
+        beq $t7, $zero, L3
+        bne $t7, $t0, faila
+    L3:
+        lw $t7, -4($t5)
+        beq $t7, $zero, successa
+        beq $t7, $t0, successa
+        j faila
+a3:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    addi $sp, $sp, -4
+    sw $t4, 0($sp)
+    jal collision_a2
+a4:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    addi $sp, $sp, -4
+    sw $t3, 0($sp)
+    addi $sp, $sp, -4
+    sw $t4, 0($sp)
+    jal collision_a3
+a5:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    addi $sp, $sp, -4
+    sw $t3, 0($sp)
+    addi $sp, $sp, -4
+    sw $t4, 0($sp)
+    jal collision_a3
+a6:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_a2
+    
+successa:
+    j update_a
+faila:
+    j keyboard
+
 skey:
+    add $t7, $zero, $zero # set t7 to 0 and randomly load piece
+    beq $a0, $t7, s0
+    addi $t7, $t7, 1 
+    beq $a0, $t7, s1
+    addi $t7, $t7, 1
+    beq $a0, $t7, s2
+    addi $t7, $t7, 1
+    beq $a0, $t7, s3
+    addi $t7, $t7, 1
+    beq $a0, $t7, s4
+    addi $t7, $t7, 1
+    beq $a0, $t7, s5
+    addi $t7, $t7, 1
+    beq $a0, $t7, s6
+    addi $t7, $t7, 1
     
     update_s:
         lw $t0, dark_grey
@@ -269,8 +406,117 @@ skey:
         sw $t1, 0($t4)
         sw $t1, 0($t5)
         j keyboard
-dkey:
 
+collision_s1:
+    lw $a1, 0($sp)
+    addi $sp, $sp, 4
+    lw $t0, dark_grey
+    lw $t7, 128($a1)
+    beq $t7, $zero, successs
+    beq $t7, $t0, successs
+    j fails
+collision_s2:
+    lw $a1, 0($sp)
+    addi $sp, $sp, 4
+    lw $a2, 0($sp)
+    addi $sp, $sp, 4
+    lw $t0, dark_grey
+    lw $t7, 128($a1)
+    beq $t7, $zero, ifs2
+    bne $t7, $t0, fails
+    ifs2:
+        lw $t7, 128($a2)
+        beq $t7, $zero, successs
+        beq $t7, $t0, successs
+        j fails
+collision_s3:
+    lw $a1, 0($sp)
+    addi $sp, $sp, 4
+    lw $a2, 0($sp)
+    addi $sp, $sp, 4
+    lw $a3, 0($sp)
+    addi $sp, $sp, 4
+    lw $t0, dark_grey
+    lw $t7, 128($a1)
+    beq $t7, $zero, ifs3
+    bne $t7, $t0, fails
+    ifs3:
+        lw $t7, 128($a2)
+        beq $t7, $zero, L7
+        bne $t7, $t0, fails
+    L7:
+        lw $t7, 128($a3)
+        beq $t7, $zero, successs
+        beq $t7, $t0, successs
+        j fails
+s0:
+    addi $sp, $sp, -4
+    sw $t4, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_s2
+s1:
+    addi $sp, $sp, -4
+    sw $t3, 0($sp)
+    addi $sp, $sp, -4
+    sw $t4, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_s3
+s2:
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_s1
+s3:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    addi $sp, $sp, -4
+    sw $t4, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_s3
+s4:
+    addi $sp, $sp, -4
+    sw $t4, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_s2
+s5:
+    addi $sp, $sp, -4
+    sw $t4, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_s2
+s6:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    addi $sp, $sp, -4
+    sw $t4, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_s3
+    
+successs:
+    j update_s
+fails:
+    j game_loop
+
+dkey:
+    add $t7, $zero, $zero # set t7 to 0 and randomly load piece
+    beq $a0, $t7, d0
+    addi $t7, $t7, 1 
+    beq $a0, $t7, d1
+    addi $t7, $t7, 1
+    beq $a0, $t7, d2
+    addi $t7, $t7, 1
+    beq $a0, $t7, d3
+    addi $t7, $t7, 1
+    beq $a0, $t7, d4
+    addi $t7, $t7, 1
+    beq $a0, $t7, d5
+    addi $t7, $t7, 1
+    beq $a0, $t7, d6
+    
     update_d:
         lw $t0, dark_grey
         addi $t2, $t2, 4
@@ -312,6 +558,111 @@ dkey:
         sw $t1, 0($t4)
         sw $t1, 0($t5)
         j keyboard
+collision_d1:
+    lw $a1, 0($sp)
+    addi $sp, $sp, 4
+    lw $t0, dark_grey
+    lw $t7, 4($a1)
+    beq $t7, $zero, successd
+    beq $t7, $t0, successd
+    j faild
+collision_d2:
+    lw $a1, 0($sp)
+    addi $sp, $sp, 4
+    lw $a2, 0($sp)
+    addi $sp, $sp, 4
+    lw $t0, dark_grey
+    lw $t7, 4($a1)
+    beq $t7, $zero, ifd2
+    bne $t7, $t0, faild
+    ifd2:
+        lw $t7, 4($a2)
+        beq $t7, $zero, successd
+        beq $t7, $t0, successd
+        j faild
+collision_d3:
+    lw $a1, 0($sp)
+    addi $sp, $sp, 4
+    lw $a2, 0($sp)
+    addi $sp, $sp, 4
+    lw $a3, 0($sp)
+    addi $sp, $sp, 4
+    lw $t0, dark_grey
+    lw $t7, 4($a1)
+    beq $t7, $zero, ifd3
+    bne $t7, $t0, faild
+    ifd3:
+        lw $t7, 4($a2)
+        beq $t7, $zero, L4
+        bne $t7, $t0, faild
+    L4:
+        lw $t7, 4($a3)
+        beq $t7, $zero, successd
+        beq $t7, $t0, successd
+        j faild
+d0:
+    addi $sp, $sp, -4
+    sw $t3, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_d2
+d1:
+    addi $sp, $sp, -4
+    sw $t3, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_d2
+d2:
+    lw $t0, dark_grey
+    lw $t7, 4($t2)
+    beq $t7, $zero, ifd4
+    bne $t7, $t0, faild
+    ifd4:
+        lw $t7, 4($t3)
+        beq $t7, $zero, L5
+        bne $t7, $t0, faild
+    L5:
+        lw $t7, 4($t4)
+        beq $t7, $zero, L6
+        bne $t7, $t0, faild
+    L6:
+        lw $t7, 4($t5)
+        beq $t7, $zero, successd
+        beq $t7, $t0, successd
+        j faild
+d3:
+    addi $sp, $sp, -4
+    sw $t3, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_d2
+d4:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    addi $sp, $sp, -4
+    sw $t3, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_d3
+d5:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    addi $sp, $sp, -4
+    sw $t3, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_d3
+d6:
+    addi $sp, $sp, -4
+    sw $t4, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_d2
+    
+successd:
+    j update_d
+faild:
+    j keyboard
 qkey:
     j Exit
 
