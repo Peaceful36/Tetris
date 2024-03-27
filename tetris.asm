@@ -28,12 +28,13 @@ ADDR_KBRD:
 GREY: .word 0xaaaaaa
 light_grey: .word 0xd3d3d3
 dark_grey: .word 0x3b3b3b
-RED: .word 0x44050f
-ORANGE: .word 0x4d2c07
+RED: .word 0xFF2E2E
+ORANGE: .word 0xFFA74F
 YELLOW: .word 0xFFFF00
-GREEN: .word 0x2a420f
-BLUE: .word 0x26404a
-PURPLE: .word 0x21192e
+GREEN: .word 0x00FF00
+BLUE: .word 0x75E6DA
+PURPLE: .word 0xca9bf7
+WHITE: .word 0xFFFFFF
 
 ##############################################################################
 # Code
@@ -47,7 +48,7 @@ main:
     # initialize the loop variables $t5, $t6
 add $t5, $zero, $zero	# set $t5 to zero
 addi $t6, $zero, 20
-lw $t1, dark_grey
+lw $t1, GREY
 lw $t0, ADDR_DSPL
 
 draw_walls_sides:
@@ -79,7 +80,7 @@ j draw_wall_bottom
 init_draw_grid:
 add $t5, $zero, $zero	# set $t5 to zero
 addi $t6, $zero, 5
-lw $t1, GREY
+lw $t1, dark_grey
 lw $t0, ADDR_DSPL
 addi $t2, $zero, 19 # change this line to change grid height 
 addi $t3, $zero, 0
@@ -101,7 +102,7 @@ b draw_grid2
 draw_grid1: # a line of the grid
 beq $t5, $t6, to_next_line
 addi $t0, $t0, 4
-sw $t1, 0($t0)
+sw $zero, 0($t0)
 addi $t0, $t0, 4
 sw $t1, 0($t0) 
 addi $t5, $t5, 1
@@ -112,7 +113,7 @@ beq $t5, $t6, to_next_line
 addi $t0, $t0, 4
 sw $t1, 0($t0)
 addi $t0, $t0, 4
-sw $t1, 0($t0) 
+sw $zero, 0($t0) 
 addi $t5, $t5, 1
 j draw_grid2
 
@@ -121,7 +122,7 @@ game_loop:
 
     li $v0, 42 #Load random integer from 0 to 6
     li $a0, 0
-    li $a1, 6
+    li $a1, 7
     syscall
     
     add $t7, $zero, $zero # set t7 to 0 and randomly load piece
@@ -182,50 +183,135 @@ wkey:
 
     j keyboard
 akey:
-    lw $t0, GREY
-    sw $t0, 0($t2)
-    sw $t0, 0($t3)
-    sw $t0, 0($t4)
-    sw $t0, 0($t5)
-    addi $t2, $t2, -4
-    addi $t3, $t3, -4
-    addi $t4, $t4, -4
-    addi $t5, $t5, -4
-    sw $t1, 0($t2)
-    sw $t1, 0($t3)
-    sw $t1, 0($t4)
-    sw $t1, 0($t5)
-    j keyboard
+    
+    update_a:
+        lw $t0, dark_grey
+        addi $t2, $t2, -4
+        addi $t3, $t3, -4
+        addi $t4, $t4, -4
+        addi $t5, $t5, -4
+        paint1:
+            lw $t6, 0($t2)
+            beq $t6, $t0, dg1
+            sw $t0, 4($t2)
+            j paint2
+        dg1:
+            sw $zero, 4($t2)
+        paint2:
+            lw $t6, 0($t3)
+            beq $t6, $t0, dg2
+            sw $t0, 4($t3)
+            j paint3
+        dg2:
+            sw $zero, 4($t3)
+        paint3:
+            lw $t6, 0($t4)
+            beq $t6, $t0, dg3
+            sw $t0, 4($t4)
+            j paint4
+        dg3:
+            sw $zero, 4($t4)
+        paint4:
+            lw $t6, 0($t5)
+            beq $t6, $t0, dg4
+            sw $t0, 4($t5)
+            j exita
+        dg4:
+            sw $zero, 4($t5)
+            
+        exita:
+        sw $t1, 0($t2)
+        sw $t1, 0($t3)
+        sw $t1, 0($t4)
+        sw $t1, 0($t5)
+        j keyboard
 skey:
-    lw $t0, GREY
-    sw $t0, 0($t2)
-    sw $t0, 0($t3)
-    sw $t0, 0($t4)
-    sw $t0, 0($t5)
-    addi $t2, $t2, 128
-    addi $t3, $t3, 128
-    addi $t4, $t4, 128
-    addi $t5, $t5, 128
-    sw $t1, 0($t2)
-    sw $t1, 0($t3)
-    sw $t1, 0($t4)
-    sw $t1, 0($t5)
-    j keyboard
+    
+    update_s:
+        lw $t0, dark_grey
+        addi $t2, $t2, 128
+        addi $t3, $t3, 128
+        addi $t4, $t4, 128
+        addi $t5, $t5, 128
+        paint9:
+            lw $t6, 0($t5)
+            beq $t6, $t0, dg9
+            sw $t0, -128($t5)
+            j paint10
+        dg9:
+            sw $zero, -128($t5)
+        paint10:
+            lw $t6, 0($t4)
+            beq $t6, $t0, dg10
+            sw $t0, -128($t4)
+            j paint11
+        dg10:
+            sw $zero, -128($t4)
+        paint11:
+            lw $t6, 0($t3)
+            beq $t6, $t0, dg11
+            sw $t0, -128($t3)
+            j paint12
+        dg11:
+            sw $zero, -128($t3)
+        paint12:
+            lw $t6, 0($t2)
+            beq $t6, $t0, dg12
+            sw $t0, -128($t2)
+            j exits
+        dg12:
+            sw $zero, -128($t2)
+            
+        exits:
+        
+        sw $t1, 0($t2)
+        sw $t1, 0($t3)
+        sw $t1, 0($t4)
+        sw $t1, 0($t5)
+        j keyboard
 dkey:
-    lw $t0, GREY
-    sw $t0, 0($t2)
-    sw $t0, 0($t3)
-    sw $t0, 0($t4)
-    sw $t0, 0($t5)
-    addi $t2, $t2, 4
-    addi $t3, $t3, 4
-    addi $t4, $t4, 4
-    addi $t5, $t5, 4
-    sw $t1, 0($t2)
-    sw $t1, 0($t3)
-    sw $t1, 0($t4)
-    sw $t1, 0($t5)
-    j keyboard
+
+    update_d:
+        lw $t0, dark_grey
+        addi $t2, $t2, 4
+        addi $t3, $t3, 4
+        addi $t4, $t4, 4
+        addi $t5, $t5, 4
+        paint5:
+            lw $t6, 0($t5)
+            beq $t6, $t0, dg5
+            sw $t0, -4($t5)
+            j paint6
+        dg5:
+            sw $zero, -4($t5)
+        paint6:
+            lw $t6, 0($t4)
+            beq $t6, $t0, dg6
+            sw $t0, -4($t4)
+            j paint7
+        dg6:
+            sw $zero, -4($t4)
+        paint7:
+            lw $t6, 0($t3)
+            beq $t6, $t0, dg7
+            sw $t0, -4($t3)
+            j paint8
+        dg7:
+            sw $zero, -4($t3)
+        paint8:
+            lw $t6, 0($t2)
+            beq $t6, $t0, dg8
+            sw $t0, -4($t2)
+            j exitd
+        dg8:
+            sw $zero, -4($t2)
+            
+        exitd:
+        sw $t1, 0($t2)
+        sw $t1, 0($t3)
+        sw $t1, 0($t4)
+        sw $t1, 0($t5)
+        j keyboard
 qkey:
     j Exit
 
@@ -310,7 +396,7 @@ draw_L:
     sw $t1, 0($t0)
     j keyboard
 draw_J:
-    lw $t1, GREY
+    lw $t1, WHITE
     lw $t0, ADDR_DSPL
     addi $t0, $t0, 20
     add $t2, $zero, $t0
@@ -324,7 +410,7 @@ draw_J:
     addi $t0, $t0, 4
     add $t5, $zero, $t0
     sw $t1, 0($t0)
-    j game_loop
+    j keyboard
     
 draw_T:
     lw $t1, PURPLE
@@ -341,7 +427,7 @@ draw_T:
     addi $t0, $t0, 124
     add $t5, $zero, $t0
     sw $t1, 0($t0)
-    j game_loop
+    j keyboard
     
 Exit:
 li $v0, 10 # terminate the program gracefully
