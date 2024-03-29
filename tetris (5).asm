@@ -239,6 +239,13 @@ a1:
     sw $t4, 0($sp)
     jal collision_a3
 a2:
+    lw $t8, rotation
+    beq $t8, 0, collision_a2_0
+    beq $t8, 1, collision_a2_90
+    beq $t8, 2, collision_a2_0
+    beq $t8, 3, collision_a2_90
+    
+    collision_a2_0:
     lw $t0, dark_grey
     lw $t7, -4($t2)
     beq $t7, $zero, ifa4
@@ -256,13 +263,40 @@ a2:
         beq $t7, $zero, successa
         beq $t7, $t0, successa
         j faila
+        
+    collision_a2_90:
+        addi $sp, $sp, -4
+        sw $t5, 0($sp)
+        jal collision_a1
 a3:
+    lw $t8, rotation
+    beq $t8, 0, collision_a3_Z0
+    beq $t8, 1, collision_a3_Z90
+    beq $t8, 2, collision_a3_Z0
+    beq $t8, 3, collision_a3_Z90
+    
+    collision_a3_Z0:
     addi $sp, $sp, -4
     sw $t2, 0($sp)
     addi $sp, $sp, -4
     sw $t4, 0($sp)
     jal collision_a2
+    
+    collision_a3_Z90:
+    addi $sp, $sp, -4
+    sw $t4, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_a2
+    
 a4:
+    lw $t8, rotation
+    beq $t8, 0, collision_a4_0
+    beq $t8, 1, collision_a4_90
+    beq $t8, 2, collision_a4_180
+    beq $t8, 3, collision_a4_270
+    
+    collision_a4_0:
     addi $sp, $sp, -4
     sw $t2, 0($sp)
     addi $sp, $sp, -4
@@ -270,6 +304,28 @@ a4:
     addi $sp, $sp, -4
     sw $t4, 0($sp)
     jal collision_a3
+    
+    collision_a4_90:
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    addi $sp, $sp, -4
+    sw $t4, 0($sp)
+    jal collision_a2
+    
+    collision_a4_180:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    addi $sp, $sp, -4
+    sw $t3, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_a3
+    
+    collision_a4_270:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    jal collision_a1
+    
 a5:
     addi $sp, $sp, -4
     sw $t2, 0($sp)
@@ -414,10 +470,43 @@ s1:
     sw $t5, 0($sp)
     jal collision_s2
 s2:
+    lw $t8, rotation
+    beq $t8, 0, collision_s2_0
+    beq $t8, 1, collision_s2_90
+    beq $t8, 2, collision_s2_0
+    beq $t8, 3, collision_s2_90
+    
+    collision_s2_0:
     addi $sp, $sp, -4
     sw $t5, 0($sp)
     jal collision_s1
+    
+    collision_s2_90:
+    lw $t0, dark_grey
+    lw $t7, 128($t2)
+    beq $t7, $zero, ifs4
+    bne $t7, $t0, fails
+    ifs4:
+        lw $t7, 128($t3)
+        beq $t7, $zero, Ls2
+        bne $t7, $t0, fails
+    Ls2:
+        lw $t7, 128($t4)
+        beq $t7, $zero, Ls3
+        bne $t7, $t0, fails
+    Ls3:
+        lw $t7, 128($t5)
+        beq $t7, $zero, successs
+        beq $t7, $t0, successs
+        j fails
+    
 s3:
+    lw $t8, rotation
+    beq $t8, 0, collision_s3_0
+    beq $t8, 1, collision_s3_90
+    beq $t8, 2, collision_s3_0
+    beq $t8, 3, collision_s3_90
+    collision_s3_0:
     addi $sp, $sp, -4
     sw $t2, 0($sp)
     addi $sp, $sp, -4
@@ -425,12 +514,50 @@ s3:
     addi $sp, $sp, -4
     sw $t5, 0($sp)
     jal collision_s3
+    
+    collision_s3_90:
+    addi $sp, $sp, -4
+    sw $t3, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    j collision_s2
+    
 s4:
+    lw $t8, rotation
+    beq $t8, 0, collision_s4_0
+    beq $t8, 1, collision_s4_90
+    beq $t8, 2, collision_s4_180
+    beq $t8, 3, collision_s4_270
+    
+    collision_s4_0:
     addi $sp, $sp, -4
     sw $t4, 0($sp)
     addi $sp, $sp, -4
     sw $t5, 0($sp)
     jal collision_s2
+    
+    collision_s4_90:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    addi $sp, $sp, -4
+    sw $t3, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_s3
+    
+    collision_s4_180:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    jal collision_s1
+    collision_s4_270:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    addi $sp, $sp, -4
+    sw $t3, 0($sp)
+    addi $sp, $sp, -4
+    sw $t4, 0($sp)
+    jal collision_s3
+    
 s5:
     addi $sp, $sp, -4
     sw $t4, 0($sp)
@@ -574,6 +701,13 @@ d1:
     sw $t4, 0($sp)
     jal collision_d3
 d2:
+    lw $t8, rotation
+    beq $t8, 0, collision_d2_0
+    beq $t8, 1, collision_d2_90
+    beq $t8, 2, collision_d2_0
+    beq $t8, 3, collision_d2_90
+    
+    collision_d2_0:
     addi $t0, $zero, 0
     lw $t7, 4($t2)
     beq $t7, $zero, ifd4
@@ -591,13 +725,42 @@ d2:
         beq $t7, $zero, successd
         beq $t7, $t0, successd
         j faild
+        
+    collision_d2_90:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    j collision_d1
+    
 d3:
+    lw $t8, rotation
+    beq $t8, 0, collision_dZ0
+    beq $t8, 1, collision_dZ90
+    beq $t8, 2, collision_dZ0
+    beq $t8, 3, collision_dZ90
+    
+    collision_dZ0:
     addi $sp, $sp, -4
     sw $t3, 0($sp)
     addi $sp, $sp, -4
     sw $t5, 0($sp)
     jal collision_d2
+    
+    collision_dZ90:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    addi $sp, $sp, -4
+    sw $t3, 0($sp)
+    jal collision_d2
+    
+    
 d4:
+    lw $t8, rotation
+    beq $t8, 0, collision_d4_0
+    beq $t8, 1, collision_d4_90
+    beq $t8, 2, collision_d4_180
+    beq $t8, 3, collision_d4_270
+    
+    collision_d4_0:
     addi $sp, $sp, -4
     sw $t2, 0($sp)
     addi $sp, $sp, -4
@@ -605,6 +768,29 @@ d4:
     addi $sp, $sp, -4
     sw $t5, 0($sp)
     jal collision_d3
+    
+    collision_d4_90:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    jal collision_d1
+    
+    collision_d4_180:
+    addi $sp, $sp, -4
+    sw $t2, 0($sp)
+    addi $sp, $sp, -4
+    sw $t3, 0($sp)
+    addi $sp, $sp, -4
+    sw $t4, 0($sp)
+    jal collision_d3
+    
+    collision_d4_270:
+    addi $sp, $sp, -4
+    sw $t4, 0($sp)
+    addi $sp, $sp, -4
+    sw $t5, 0($sp)
+    jal collision_d2
+    
+    
 d5:
     addi $sp, $sp, -4
     sw $t2, 0($sp)
@@ -662,9 +848,9 @@ wkey:
     addi $t7, $t7, 1
     beq $a0, $t7, rotate_I
     addi $t7, $t7, 1
-    beq $a0, $t7, tetris1
+    beq $a0, $t7, rotate_Z
     addi $t7, $t7, 1
-    beq $a0, $t7, tetris2
+    beq $a0, $t7, rotate_L
     addi $t7, $t7, 1
     beq $a0, $t7, tetris3
     addi $t7, $t7, 1
@@ -815,6 +1001,104 @@ wkey:
             addi $t4, $t4, 132
             addi $t5, $t5, 124
             j exit_w
+            
+    rotate_Z:
+        beq $t9, 0, rotate_Z_90
+        beq $t9, 1, rotate_Z_180
+        beq $t9, 2, rotate_Z_270
+        beq $t9, 3, rotate_Z_360
+        
+    rotate_Z_90:
+        addi $t9, $t9, 1
+        sw $t9, rotation
+        sw $zero, 0($t2)
+        sw $zero, 0($t3)
+        sw $zero, 0($t4)
+        sw $zero, 0($t5)
+        addi $t2, $t2, -120
+        addi $t3, $t3, 4
+        addi $t4, $t4, -128
+        addi $t5, $t5, -4
+        j exit_w
+        
+    rotate_Z_180:
+        addi $t9, $t9, 1
+        sw $t9, rotation
+        sw $zero, 0($t2)
+        sw $zero, 0($t3)
+        sw $zero, 0($t4)
+        sw $zero, 0($t5)
+        addi $t2, $t2, 120
+        addi $t3, $t3, -4
+        addi $t4, $t4, 128
+        addi $t5, $t5, 4
+        j exit_w
+    rotate_Z_270:
+        j rotate_Z_90
+    rotate_Z_360:
+        addi $t9, $zero, 0
+        sw $t9, rotation
+        sw $zero, 0($t2)
+        sw $zero, 0($t3)
+        sw $zero, 0($t4)
+        sw $zero, 0($t5)
+        addi $t2, $t2, 120
+        addi $t3, $t3, -4
+        addi $t4, $t4, 128
+        addi $t5, $t5, 4
+        j exit_w
+        
+    rotate_L:
+        beq $t9, 0, rotate_L_90
+        beq $t9, 1, rotate_L_180
+        beq $t9, 2, rotate_L_270
+        beq $t9, 3, rotate_L_360
+        
+        rotate_L_90:
+            addi $t9, $t9, 1
+            sw $t9, rotation
+            sw $zero, 0($t2)
+            sw $zero, 0($t3)
+            sw $zero, 0($t4)
+            sw $zero, 0($t5)
+            addi $t2, $t2, 132
+            addi $t4, $t4, -132
+            addi $t5, $t5, -8
+            j exit_w
+        rotate_L_180:
+            addi $t9, $t9, 1
+            sw $t9, rotation
+            sw $zero, 0($t2)
+            sw $zero, 0($t3)
+            sw $zero, 0($t4)
+            sw $zero, 0($t5)
+            addi $t2, $t2, 124
+            addi $t4, $t4, -124
+            addi $t5, $t5, -256
+            j exit_w
+        rotate_L_270:
+            addi $t9, $t9, 1
+            sw $t9, rotation
+            sw $zero, 0($t2)
+            sw $zero, 0($t3)
+            sw $zero, 0($t4)
+            sw $zero, 0($t5)
+            addi $t2, $t2, -132
+            addi $t4, $t4, 132
+            addi $t5, $t5, 8
+            j exit_w
+        rotate_L_360:
+            add $t9, $zero, $zero
+            sw $t9, rotation
+            sw $zero, 0($t2)
+            sw $zero, 0($t3)
+            sw $zero, 0($t4)
+            sw $zero, 0($t5)
+            addi $t2, $t2, -124
+            addi $t4, $t4, 124
+            addi $t5, $t5, 256
+            j exit_w
+    
     exit_w:
         sw $t1, 0($t2)
         sw $t1, 0($t3)
