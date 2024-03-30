@@ -177,18 +177,24 @@ game_loop:
         bne $t7, $zero, game_over
         j draw_T
     
-	# 1a. Check if key has been pressed
+    add $t7,$zero, $zero
 	keyboard:
-	   lw $t9, ADDR_KBRD  # Load the address of the keyboard
-	   lw $t8, 0($t9) # Load the keyboard input
-	   beq $t8, 1, keyboard_input # If first word 1, key is pressed
+    	   lw $t9, ADDR_KBRD  # Load the address of the keyboard
+    	   lw $t8, 0($t9) # Load the keyboard input
+    	   beq $t8, 1, keyboard_input # If first word 1, key is pressed
 	
-	li $v0, 32
-    li $a0, 750
-    syscall
-	j skey
-	
-    j keyboard
+	loop:
+	   delay:
+    	   beq $t7, 10, skey
+    	   addi $t7, $t7, 1
+    	   li $v0, 32
+    	   li $a0, 40
+	       syscall
+	       lw $t9, ADDR_KBRD  # Load the address of the keyboard
+    	   lw $t8, 0($t9) # Load the keyboard input
+    	   beq $t8, 1, keyboard_input # If first word 1, key is pressed
+	   j keyboard
+
     
 #A key is pressed
 keyboard_input:
@@ -450,8 +456,10 @@ a6:
         jal collision_a3
     
 successa:
+    add $t7,$zero, $zero
     j update_a
 faila:
+    add $t7,$zero, $zero
     j keyboard
 
 skey:
@@ -704,8 +712,10 @@ s6:
     
     
 successs:
+    add $t7,$zero, $zero
     j update_s
 fails:
+    add $t7,$zero, $zero
     j game_loop
 
 
@@ -960,8 +970,10 @@ d6:
         jal collision_d3
     
 successd:
+    add $t7,$zero, $zero
     j update_d
 faild:
+    add $t7,$zero, $zero
     j keyboard
     
 wkey:
@@ -1481,8 +1493,10 @@ wkey:
         sw $t1, 0($t3)
         sw $t1, 0($t4)
         sw $t1, 0($t5)
+        add $t7,$zero, $zero
         j keyboard    
 failw:
+    add $t7,$zero, $zero
     j keyboard
     
 qkey:
