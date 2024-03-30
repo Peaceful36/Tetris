@@ -188,7 +188,7 @@ game_loop:
     	   beq $t7, 10, skey
     	   addi $t7, $t7, 1
     	   li $v0, 32
-    	   li $a0, 40
+    	   li $a0, 50
 	       syscall
 	       lw $t9, ADDR_KBRD  # Load the address of the keyboard
     	   lw $t8, 0($t9) # Load the keyboard input
@@ -1104,7 +1104,7 @@ wkey:
             bne $t8, $zero, failw
             lw $t8, -128($t4)
             bne $t8, $zero, failw
-            lw $t8, -268($t4)
+            lw $t8, -256($t4)
             bne $t8, $zero, failw
             lw $t8, -128($t5)
             bne $t8, $zero, failw
@@ -1136,7 +1136,7 @@ wkey:
             bne $t8, $zero, failw
             lw $t8, -128($t4)
             bne $t8, $zero, failw
-            lw $t8, -268($t4)
+            lw $t8, -256($t4)
             bne $t8, $zero, failw
             lw $t8, -128($t5)
             bne $t8, $zero, failw
@@ -1715,11 +1715,13 @@ game_over:
     sw $t6, 1392($t0)
     sw $t6, 1520($t0)
     sw $t6, 1648($t0)
+    
     keyboard_lose:
 	   lw $t9, ADDR_KBRD  # Load the address of the keyboard
 	   lw $t8, 0($t9) # Load the keyboard input
 	   beq $t8, 1, keyboard_choose # I
 	   j keyboard_lose
+	   
 keyboard_choose:
     lw $t7, 4($t9)
     beq $t7, 114, rkey  # Restart the game
