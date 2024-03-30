@@ -949,6 +949,11 @@ wkey:
         beq $t9, 3, rotate_S_360
         
         rotate_S_90:
+            lw $t8, 128($t3)
+            bne $t8, $zero, failw
+            lw $t8, -124($t3)
+            bne $t8, $zero, failw
+            
             addi $t9, $t9, 1
             sw $t9, rotation
             sw $zero, 0($t2)
@@ -962,6 +967,11 @@ wkey:
             j exit_w
             
         rotate_S_180:
+            lw $t8, -4($t3)
+            bne $t8, $zero, failw
+            lw $t8, -8($t3)
+            bne $t8, $zero, failw
+        
             addi $t9, $t9, 1
             sw $t9, rotation
             sw $zero, 0($t2)
@@ -977,6 +987,11 @@ wkey:
         rotate_S_270:
             j rotate_S_90
         rotate_S_360:
+            lw $t8, -4($t3)
+            bne $t8, $zero, failw
+            lw $t8, -8($t3)
+            bne $t8, $zero, failw
+        
             addi $t9, $zero, 0
             sw $t9, rotation
             sw $zero, 0($t2)
@@ -996,6 +1011,13 @@ wkey:
         beq $t9, 3, rotate_I_360
         
         rotate_I_90:
+            lw $t8, -4($t3)
+            bne $t8, $zero, failw
+            lw $t8, -8($t3)
+            bne $t8, $zero, failw
+            lw $t8, 4($t3)
+            bne $t8, $zero, failw
+        
             addi $t9, $t9, 1
             sw $t9, rotation
             sw $zero, 0($t2)
@@ -1009,6 +1031,13 @@ wkey:
             j exit_w
             
         rotate_I_180:
+            lw $t8, -128($t4)
+            bne $t8, $zero, failw
+            lw $t8, -256($t4)
+            bne $t8, $zero, failw
+            lw $t8, 128($t4)
+            bne $t8, $zero, failw
+            
             addi $t9, $t9, 1
             sw $t9, rotation
             sw $zero, 0($t2)
@@ -1024,6 +1053,13 @@ wkey:
         rotate_I_270:
             j rotate_I_90
         rotate_I_360:
+            lw $t8, -128($t4)
+            bne $t8, $zero, failw
+            lw $t8, -256($t4)
+            bne $t8, $zero, failw
+            lw $t8, 128($t4)
+            bne $t8, $zero, failw
+            
             sw $zero, rotation
             sw $zero, 0($t2)
             sw $zero, 0($t3)
@@ -1129,6 +1165,11 @@ wkey:
         beq $t9, 3, rotate_Z_360
         
         rotate_Z_90:
+            lw $t8, 4($t3)
+            bne $t8, $zero, failw
+            lw $t8, -124($t3)
+            bne $t8, $zero, failw
+        
             addi $t9, $t9, 1
             sw $t9, rotation
             sw $zero, 0($t2)
@@ -1142,6 +1183,11 @@ wkey:
             j exit_w
         
         rotate_Z_180:
+            lw $t8, 128($t3)
+            bne $t8, $zero, failw
+            lw $t8, -8($t3)
+            bne $t8, $zero, failw
+        
             addi $t9, $t9, 1
             sw $t9, rotation
             sw $zero, 0($t2)
@@ -1156,6 +1202,11 @@ wkey:
         rotate_Z_270:
             j rotate_Z_90
         rotate_Z_360:
+            lw $t8, 128($t3)
+            bne $t8, $zero, failw
+            lw $t8, -8($t3)
+            bne $t8, $zero, failw
+            
             addi $t9, $zero, 0
             sw $t9, rotation
             sw $zero, 0($t2)
