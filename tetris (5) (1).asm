@@ -80,7 +80,8 @@ j draw_wall_bottom
 
 
 game_loop:
-    
+
+
     li $v0, 42 #Load random integer from 0 to 6
     li $a0, 0
     li $a1, 7
@@ -103,18 +104,81 @@ game_loop:
     beq $a0, $t7, tetris6
     
     tetris0: # O tetris
+        lw $t0, ADDR_DSPL
+        lw $t7, 20($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 24($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 148($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 152($t0)
+        bne $t7, $zero, game_over
         j draw_O
     tetris1: # S tetris
+        lw $t0, ADDR_DSPL
+        lw $t7, 20($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 24($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 144($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 148($t0)
+        bne $t7, $zero, game_over
         j draw_S
     tetris2: # I tetris
+        lw $t0, ADDR_DSPL
+        lw $t7, 20($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 148($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 276($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 404($t0)
+        bne $t7, $zero, game_over
         j draw_I
     tetris3: # Z tetris
+        lw $t0, ADDR_DSPL
+        lw $t7, 20($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 24($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 152($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 156($t0)
+        bne $t7, $zero, game_over
         j draw_Z
     tetris4: # L tetris
+        lw $t0, ADDR_DSPL
+        lw $t7, 20($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 148($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 276($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 280($t0)
+        bne $t7, $zero, game_over
         j draw_L
     tetris5: # J tetris
+        lw $t0, ADDR_DSPL
+        lw $t7, 20($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 148($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 272($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 276($t0)
+        bne $t7, $zero, game_over
         j draw_J
     tetris6: # T tetris
+        lw $t0, ADDR_DSPL
+        lw $t7, 16($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 20($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 24($t0)
+        bne $t7, $zero, game_over
+        lw $t7, 148($t0)
+        bne $t7, $zero, game_over
         j draw_T
         
 	# 1a. Check if key has been pressed
@@ -949,9 +1013,11 @@ wkey:
         beq $t9, 3, rotate_S_360
         
         rotate_S_90:
-            lw $t8, 128($t3)
+            lw $t8, -128($t2)
             bne $t8, $zero, failw
-            lw $t8, -124($t3)
+            lw $t8, -124($t2)
+            bne $t8, $zero, failw
+            lw $t8, 128($t3)
             bne $t8, $zero, failw
             
             addi $t9, $t9, 1
@@ -967,11 +1033,13 @@ wkey:
             j exit_w
             
         rotate_S_180:
+            lw $t8, 4($t4)
+            bne $t8, $zero, failw
             lw $t8, -4($t3)
             bne $t8, $zero, failw
             lw $t8, -8($t3)
             bne $t8, $zero, failw
-        
+            
             addi $t9, $t9, 1
             sw $t9, rotation
             sw $zero, 0($t2)
@@ -987,11 +1055,13 @@ wkey:
         rotate_S_270:
             j rotate_S_90
         rotate_S_360:
+            lw $t8, 4($t4)
+            bne $t8, $zero, failw
             lw $t8, -4($t3)
             bne $t8, $zero, failw
             lw $t8, -8($t3)
             bne $t8, $zero, failw
-        
+            
             addi $t9, $zero, 0
             sw $t9, rotation
             sw $zero, 0($t2)
@@ -1011,13 +1081,23 @@ wkey:
         beq $t9, 3, rotate_I_360
         
         rotate_I_90:
+            lw $t8, 4($t4)
+            bne $t8, $zero, failw
+            lw $t8, 132($t4)
+            bne $t8, $zero, failw
+            lw $t8, -4($t2)
+            bne $t8, $zero, failw
+            lw $t8, -8($t2)
+            bne $t8, $zero, failw
             lw $t8, -4($t3)
             bne $t8, $zero, failw
             lw $t8, -8($t3)
             bne $t8, $zero, failw
-            lw $t8, 4($t3)
+            lw $t8, -4($t4)
             bne $t8, $zero, failw
-        
+            lw $t8, -8($t4)
+            bne $t8, $zero, failw
+            
             addi $t9, $t9, 1
             sw $t9, rotation
             sw $zero, 0($t2)
@@ -1031,11 +1111,21 @@ wkey:
             j exit_w
             
         rotate_I_180:
+            lw $t8, 128($t3)
+            bne $t8, $zero, failw
+            lw $t8, 132($t3)
+            bne $t8, $zero, failw
+            lw $t8, -128($t3)
+            bne $t8, $zero, failw
+            lw $t8, -256($t3)
+            bne $t8, $zero, failw
             lw $t8, -128($t4)
             bne $t8, $zero, failw
-            lw $t8, -256($t4)
+            lw $t8, -268($t4)
             bne $t8, $zero, failw
-            lw $t8, 128($t4)
+            lw $t8, -128($t5)
+            bne $t8, $zero, failw
+            lw $t8, -256($t5)
             bne $t8, $zero, failw
             
             addi $t9, $t9, 1
@@ -1053,11 +1143,21 @@ wkey:
         rotate_I_270:
             j rotate_I_90
         rotate_I_360:
+            lw $t8, 128($t3)
+            bne $t8, $zero, failw
+            lw $t8, 132($t3)
+            bne $t8, $zero, failw
+            lw $t8, -128($t3)
+            bne $t8, $zero, failw
+            lw $t8, -256($t3)
+            bne $t8, $zero, failw
             lw $t8, -128($t4)
             bne $t8, $zero, failw
-            lw $t8, -256($t4)
+            lw $t8, -268($t4)
             bne $t8, $zero, failw
-            lw $t8, 128($t4)
+            lw $t8, -128($t5)
+            bne $t8, $zero, failw
+            lw $t8, -256($t5)
             bne $t8, $zero, failw
             
             sw $zero, rotation
@@ -1165,11 +1265,15 @@ wkey:
         beq $t9, 3, rotate_Z_360
         
         rotate_Z_90:
-            lw $t8, 4($t3)
+            lw $t8, -128($t2)
             bne $t8, $zero, failw
-            lw $t8, -124($t3)
+            lw $t8, -124($t2)
             bne $t8, $zero, failw
-        
+            lw $t8, -120($t2)
+            bne $t8, $zero, failw
+            lw $t8, 8($t2)
+            bne $t8, $zero, failw
+            
             addi $t9, $t9, 1
             sw $t9, rotation
             sw $zero, 0($t2)
@@ -1183,11 +1287,15 @@ wkey:
             j exit_w
         
         rotate_Z_180:
-            lw $t8, 128($t3)
+            lw $t8, -4($t2)
             bne $t8, $zero, failw
-            lw $t8, -8($t3)
+            lw $t8, -8($t2)
             bne $t8, $zero, failw
-        
+            lw $t8, -4($t4)
+            bne $t8, $zero, failw
+            lw $t8, 4($t5)
+            bne $t8, $zero, failw
+            
             addi $t9, $t9, 1
             sw $t9, rotation
             sw $zero, 0($t2)
@@ -1202,9 +1310,13 @@ wkey:
         rotate_Z_270:
             j rotate_Z_90
         rotate_Z_360:
-            lw $t8, 128($t3)
+            lw $t8, -4($t2)
             bne $t8, $zero, failw
-            lw $t8, -8($t3)
+            lw $t8, -8($t2)
+            bne $t8, $zero, failw
+            lw $t8, -4($t4)
+            bne $t8, $zero, failw
+            lw $t8, 4($t5)
             bne $t8, $zero, failw
             
             addi $t9, $zero, 0
@@ -1518,6 +1630,116 @@ draw_T:
     add $t5, $zero, $t0
     sw $t1, 0($t0)
     j keyboard
+game_over:
+    lw $t0, ADDR_DSPL
+    lw $t6, RED
+    sw $t6, 308($t0)
+    sw $t6, 312($t0)
+    sw $t6, 316($t0)
+    sw $t6, 320($t0)
+    sw $t6, 436($t0)
+    sw $t6, 564($t0)
+    sw $t6, 692($t0)
+    sw $t6, 820($t0)
+    sw $t6, 824($t0)
+    sw $t6, 828($t0)
+    sw $t6, 832($t0)
+    sw $t6, 704($t0)
+    sw $t6, 576($t0)
+    sw $t6, 572($t0)
+    lw $t6, ORANGE
+    sw $t6, 328($t0)
+    sw $t6, 456($t0)
+    sw $t6, 584($t0)
+    sw $t6, 712($t0)
+    sw $t6, 840($t0)
+    sw $t6, 332($t0)
+    sw $t6, 336($t0)
+    sw $t6, 464($t0)
+    sw $t6, 592($t0)
+    sw $t6, 720($t0)
+    sw $t6, 848($t0)
+    sw $t6, 588($t0)
+    lw $t6, YELLOW
+    sw $t6, 344($t0)
+    sw $t6, 348($t0)
+    sw $t6, 352($t0)
+    sw $t6, 356($t0)
+    sw $t6, 360($t0)
+    sw $t6, 472($t0)
+    sw $t6, 600($t0)
+    sw $t6, 728($t0)
+    sw $t6, 856($t0)
+    sw $t6, 480($t0)
+    sw $t6, 608($t0)
+    sw $t6, 736($t0)
+    sw $t6, 864($t0)
+    sw $t6, 488($t0)
+    sw $t6, 616($t0)
+    sw $t6, 744($t0)
+    sw $t6, 872($t0)
+    lw $t6, PURPLE
+    sw $t6, 368($t0)
+    sw $t6, 372($t0)
+    sw $t6, 376($t0)
+    sw $t6, 496($t0)
+    sw $t6, 624($t0)
+    sw $t6, 628($t0)
+    sw $t6, 632($t0)
+    sw $t6, 752($t0)
+    sw $t6, 880($t0)
+    sw $t6, 884($t0)
+    sw $t6, 888($t0)
+    lw $t6, GREY
+    sw $t6, 1076($t0)
+    sw $t6, 1080($t0)
+    sw $t6, 1084($t0)
+    sw $t6, 1088($t0)
+    sw $t6, 1204($t0)
+    sw $t6, 1332($t0)
+    sw $t6, 1460($t0)
+    sw $t6, 1588($t0)
+    sw $t6, 1592($t0)
+    sw $t6, 1596($t0)
+    sw $t6, 1600($t0)
+    sw $t6, 1472($t0)
+    sw $t6, 1344($t0)
+    sw $t6, 1216($t0)
+    lw $t6, BLUE
+    sw $t6, 1352($t0)
+    sw $t6, 1484($t0)
+    sw $t6, 1616($t0)
+    sw $t6, 1492($t0)
+    sw $t6, 1368($t0)
+    lw $t6, WHITE
+    sw $t6, 1120($t0)
+    sw $t6, 1124($t0)
+    sw $t6, 1128($t0)
+    sw $t6, 1248($t0)
+    sw $t6, 1376($t0)
+    sw $t6, 1380($t0)
+    sw $t6, 1384($t0)
+    sw $t6, 1504($t0)
+    sw $t6, 1632($t0)
+    sw $t6, 1636($t0)
+    sw $t6, 1640($t0)
+    lw $t6, GREEN
+    sw $t6, 1264($t0)
+    sw $t6, 1268($t0)
+    sw $t6, 1272($t0)
+    sw $t6, 1392($t0)
+    sw $t6, 1520($t0)
+    sw $t6, 1648($t0)
+    keyboard_lose:
+	   lw $t9, ADDR_KBRD  # Load the address of the keyboard
+	   lw $t8, 0($t9) # Load the keyboard input
+	   beq $t8, 1, keyboard_choose # I
+	   j keyboard_lose
+keyboard_choose:
+    lw $t7, 4($t9)
+    beq $t7, 114, rkey  # Restart the game
+    beq $t7, 113, qkey
+rkey:
     
 Exit:
 li $v0, 10 # terminate the program gracefully
