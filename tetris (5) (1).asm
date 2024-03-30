@@ -37,6 +37,7 @@ PURPLE: .word 0xca9bf7
 WHITE: .word 0xFFFFFF
 
 rotation: .space 4
+id: .space 4
 ##############################################################################
 # Code
 ##############################################################################
@@ -87,21 +88,16 @@ game_loop:
     li $a1, 7
     syscall
     
-    add $t7, $zero, $zero # set t7 to 0 and randomly load piece
-    sw $t7, rotation
-    beq $a0, $t7, tetris0
-    addi $t7, $t7, 1 
-    beq $a0, $t7, tetris1
-    addi $t7, $t7, 1
-    beq $a0, $t7, tetris2
-    addi $t7, $t7, 1
-    beq $a0, $t7, tetris3
-    addi $t7, $t7, 1
-    beq $a0, $t7, tetris4
-    addi $t7, $t7, 1
-    beq $a0, $t7, tetris5
-    addi $t7, $t7, 1
-    beq $a0, $t7, tetris6
+    sw $a0, id
+    lw $t6, id
+    sw $zero, rotation
+    beq $t6, 0, tetris0
+    beq $t6, 1, tetris1
+    beq $t6, 2, tetris2
+    beq $t6, 3, tetris3
+    beq $t6, 4, tetris4
+    beq $t6, 5, tetris5
+    beq $t6, 6, tetris6
     
     tetris0: # O tetris
         lw $t0, ADDR_DSPL
@@ -180,20 +176,18 @@ game_loop:
         lw $t7, 148($t0)
         bne $t7, $zero, game_over
         j draw_T
-        
+    
 	# 1a. Check if key has been pressed
 	keyboard:
 	   lw $t9, ADDR_KBRD  # Load the address of the keyboard
 	   lw $t8, 0($t9) # Load the keyboard input
 	   beq $t8, 1, keyboard_input # If first word 1, key is pressed
 	
-    # 1b. Check which key has been pressed
-    # 2a. Check for collisions
-	# 2b. Update locations (paddle, ball)
-	# 3. Draw the screen
-	# 4. Sleep
-
-    #5. Go back to 1
+	li $v0, 32
+    li $a0, 750
+    syscall
+	j skey
+	
     j keyboard
     
 #A key is pressed
@@ -204,22 +198,18 @@ keyboard_input:
     beq $t7, 115, skey
     beq $t7, 97, akey
     beq $t7, 113, qkey
-
+    beq $t7, 112, pkey # Pause
+pkey:
+    
 akey:
-    add $t7, $zero, $zero # set t7 to 0 and randomly load piece
-    beq $a0, $t7, a0
-    addi $t7, $t7, 1 
-    beq $a0, $t7, a1
-    addi $t7, $t7, 1
-    beq $a0, $t7, a2
-    addi $t7, $t7, 1
-    beq $a0, $t7, a3
-    addi $t7, $t7, 1
-    beq $a0, $t7, a4
-    addi $t7, $t7, 1
-    beq $a0, $t7, a5
-    addi $t7, $t7, 1
-    beq $a0, $t7, a6
+    lw $t6, id
+    beq $t6, 0, a0
+    beq $t6, 1, a1
+    beq $t6, 2, a2
+    beq $t6, 3, a3
+    beq $t6, 4, a4
+    beq $t6, 5, a5
+    beq $t6, 6, a6
     
     update_a:
         sw $zero, 0($t2)
@@ -465,21 +455,14 @@ faila:
     j keyboard
 
 skey:
-    add $t7, $zero, $zero # set t7 to 0 and randomly load piece
-    beq $a0, $t7, s0
-    addi $t7, $t7, 1 
-    beq $a0, $t7, s1
-    addi $t7, $t7, 1
-    beq $a0, $t7, s2
-    addi $t7, $t7, 1
-    beq $a0, $t7, s3
-    addi $t7, $t7, 1
-    beq $a0, $t7, s4
-    addi $t7, $t7, 1
-    beq $a0, $t7, s5
-    addi $t7, $t7, 1
-    beq $a0, $t7, s6
-    addi $t7, $t7, 1
+     lw $t6, id
+    beq $t6, 0, s0
+    beq $t6, 1, s1
+    beq $t6, 2, s2
+    beq $t6, 3, s3
+    beq $t6, 4, s4
+    beq $t6, 5, s5
+    beq $t6, 6, s6
     
     update_s:
         sw $zero, 0($t2)
@@ -727,20 +710,14 @@ fails:
 
 
 dkey:
-    add $t7, $zero, $zero # set t7 to 0 and randomly load piece
-    beq $a0, $t7, d0
-    addi $t7, $t7, 1 
-    beq $a0, $t7, d1
-    addi $t7, $t7, 1
-    beq $a0, $t7, d2
-    addi $t7, $t7, 1
-    beq $a0, $t7, d3
-    addi $t7, $t7, 1
-    beq $a0, $t7, d4
-    addi $t7, $t7, 1
-    beq $a0, $t7, d5
-    addi $t7, $t7, 1
-    beq $a0, $t7, d6
+    lw $t6, id
+    beq $t6, 0, d0
+    beq $t6, 1, d1
+    beq $t6, 2, d2
+    beq $t6, 3, d3
+    beq $t6, 4, d4
+    beq $t6, 5, d5
+    beq $t6, 6, d6
     
     update_d:
         sw $zero, 0($t2)
@@ -989,20 +966,14 @@ faild:
     
 wkey:
     lw $t9, rotation
-    add $t7, $zero, $zero # set t7 to 0 and randomly load piece
-    beq $a0, $t7, exit_w
-    addi $t7, $t7, 1 
-    beq $a0, $t7, rotate_S
-    addi $t7, $t7, 1
-    beq $a0, $t7, rotate_I
-    addi $t7, $t7, 1
-    beq $a0, $t7, rotate_Z
-    addi $t7, $t7, 1
-    beq $a0, $t7, rotate_L
-    addi $t7, $t7, 1
-    beq $a0, $t7, rotate_J
-    addi $t7, $t7, 1
-    beq $a0, $t7, rotate_T
+    lw $t6, id
+    beq $t6, 0, exit_w
+    beq $t6, 1, rotate_S
+    beq $t6, 2, rotate_I
+    beq $t6, 3, rotate_Z
+    beq $t6, 4, rotate_L
+    beq $t6, 5, rotate_J
+    beq $t6, 6, rotate_T
     
     
     rotate_S:
