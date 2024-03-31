@@ -1726,7 +1726,17 @@ keyboard_choose:
     lw $t7, 4($t9)
     beq $t7, 114, rkey  # Restart the game
     beq $t7, 113, qkey
+    j keyboard_lose
+    
 rkey:
+    lw $t0, ADDR_DSPL
+    add $t6, $zero, $zero
+    clear:
+        beq $t6, 2560, main
+        sw $zero, 0($t0)
+        addi $t6, $t6, 4
+        addi $t0, $t0, 4
+        j clear
     
 Exit:
 li $v0, 10 # terminate the program gracefully
