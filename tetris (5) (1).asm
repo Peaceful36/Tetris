@@ -38,6 +38,8 @@ WHITE: .word 0xFFFFFF
 
 rotation: .space 4
 id: .space 4
+line: .space 4
+count: .space 4
 ##############################################################################
 # Code
 ##############################################################################
@@ -52,6 +54,7 @@ add $t5, $zero, $zero	# set $t5 to zero
 addi $t6, $zero, 20
 lw $t1, GREY
 lw $t0, ADDR_DSPL
+sw $t5, count
 
 draw_walls_sides:
 beq $t5, $t6, reset_value	# Branch to Exit if $t5 == 16
@@ -716,6 +719,58 @@ successs:
     j update_s
 fails:
     add $t7,$zero, $zero
+    
+    lw $t0, ADDR_DSPL
+    add $t6, $zero, $zero
+    addi $t0, $t0, 2432
+    sw $t0, line
+    
+    check_line:
+        lw $t0, line
+        add $t6, $zero, $zero
+        line_check:
+            addi $t6, $t6, 4
+            addi $t0, $t0, 4
+            beq $t6, 44, remove_line
+            lw $t8, 0($t0)
+            beq $zero, $t8, check_next
+            j line_check
+            
+    remove_line:
+        addi $t6, $t6, -4
+        addi $t0, $t0, -4
+        sw $zero, 0($t0)
+        beq $t6, 4, shift_line
+        j remove_line
+        
+    shift_line:
+        lw $t0, count
+        addi $t0, $t0, 1
+        sw $t0, count
+        lw $t0, line
+        shift:
+            lw $t6, ADDR_DSPL
+            add $t8, $zero, $zero
+            beq $t0, $t6, fails
+            addi $t0, $t0, -128
+            add $t6, $t0, $zero
+            paint_one:
+                addi $t8, $t8, 4
+                addi $t6, $t6, 4
+                beq $t8, 44, shift
+                lw $t9, 0($t6)
+                sw $zero, 0($t6)
+                sw $t9, 128($t6)
+                j paint_one
+        
+    check_next:
+        lw $t0, line
+        lw $t6, ADDR_DSPL
+        beq $t0, $t6, game_loop
+        addi $t0, $t0, -128
+        sw $t0, line
+        j check_line
+        
     j game_loop
 
 
