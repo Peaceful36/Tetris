@@ -43,7 +43,6 @@ first_piece: .space 4
 current_piece: .space 4
 line: .space 4
 count: .space 4
-score: .space 4
 ##############################################################################
 # Code
 ##############################################################################
@@ -106,22 +105,8 @@ draw_preview:
     sw $t6, 1844($t0)
     sw $t6, 1840($t0)
 
-    lw $t0, ADDR_DSPL #draw 0
-    lw $t6, WHITE
-    sw $t6, 72($t0)
-    sw $t6, 76($t0)
-    sw $t6, 80($t0)
-    sw $t6, 208($t0)
-    sw $t6, 336($t0)
-    sw $t6, 464($t0)
-    sw $t6, 592($t0)
-    sw $t6, 588($t0)
-    sw $t6, 584($t0)
-    sw $t6, 200($t0)
-    sw $t6, 328($t0)
-    sw $t6, 456($t0)
-    
-    j draw_0_second
+    jal draw_0_first 
+    jal draw_0_second
 
 game_loop:
 
@@ -872,6 +857,8 @@ fails:
         lw $t0, count
         addi $t0, $t0, 1
         sw $t0, count
+        jal increase_score_ones
+        jal increase_score_tens
         lw $t0, line
         shift:
             lw $t6, ADDR_DSPL
@@ -895,7 +882,7 @@ fails:
         addi $t0, $t0, -128
         sw $t0, line
         j check_line
-        
+    
     j game_loop
 
 
@@ -2137,7 +2124,7 @@ draw_0_first:
     sw $t6, 200($t0)
     sw $t6, 328($t0)
     sw $t6, 456($t0)
-    j game_loop
+    jr $ra
     
 draw_0_second:
     lw $t0, ADDR_DSPL
@@ -2155,7 +2142,7 @@ draw_0_second:
     sw $t6, 200($t0)
     sw $t6, 328($t0)
     sw $t6, 456($t0)
-    j game_loop
+    jr $ra
     
 draw_1_first:
     lw $t0, ADDR_DSPL
@@ -2164,10 +2151,11 @@ draw_1_first:
     sw $t6, 204($t0)
     sw $t6, 200($t0)
     sw $t6, 332($t0)
-    sw $t6, 456($t0)
     sw $t6, 460($t0)
-    sw $t6, 464($t0)
-    j game_loop
+    sw $t6, 588($t0)
+    sw $t6, 584($t0)
+    sw $t6, 592($t0)
+    jr $ra
     
 draw_1_second:
     lw $t0, ADDR_DSPL
@@ -2177,10 +2165,11 @@ draw_1_second:
     sw $t6, 204($t0)
     sw $t6, 200($t0)
     sw $t6, 332($t0)
-    sw $t6, 456($t0)
     sw $t6, 460($t0)
-    sw $t6, 464($t0)
-    j game_loop
+    sw $t6, 588($t0)
+    sw $t6, 584($t0)
+    sw $t6, 592($t0)
+    jr $ra
 
 draw_5_first:
     lw $t0, ADDR_DSPL
@@ -2196,7 +2185,7 @@ draw_5_first:
     sw $t6, 200($t0)
     sw $t6, 328($t0)
     sw $t6, 332($t0)
-    j game_loop
+    jr $ra
 
 draw_5_second:
     lw $t0, ADDR_DSPL
@@ -2211,8 +2200,9 @@ draw_5_second:
     sw $t6, 588($t0)
     sw $t6, 584($t0)
     sw $t6, 200($t0)
-    sw $t6, 204($t0)
-    j game_loop
+    sw $t6, 328($t0)
+    sw $t6, 332($t0)
+    jr $ra
     
 draw_6_first:
     lw $t0, ADDR_DSPL
@@ -2229,7 +2219,7 @@ draw_6_first:
     sw $t6, 328($t0)
     sw $t6, 332($t0)
     sw $t6, 456($t0)
-    j game_loop
+    jr $ra
     
 draw_6_second:
     lw $t0, ADDR_DSPL
@@ -2247,7 +2237,7 @@ draw_6_second:
     sw $t6, 328($t0)
     sw $t6, 332($t0)
     sw $t6, 456($t0)
-    j game_loop
+    jr $ra
     
 draw_3_first:
     lw $t0, ADDR_DSPL
@@ -2263,7 +2253,7 @@ draw_3_first:
     sw $t6, 584($t0)
     sw $t6, 328($t0)
     sw $t6, 332($t0)
-    j game_loop
+    jr $ra
     
 draw_3_second:
     lw $t0, ADDR_DSPL
@@ -2280,7 +2270,7 @@ draw_3_second:
     sw $t6, 584($t0)
     sw $t6, 328($t0)
     sw $t6, 332($t0)
-    j game_loop
+    jr $ra
     
 draw_2_first:
     lw $t0, ADDR_DSPL
@@ -2296,7 +2286,7 @@ draw_2_first:
     sw $t6, 584($t0)
     sw $t6, 328($t0)
     sw $t6, 332($t0)
-    j game_loop
+    jr $ra
     
 draw_2_second:
     lw $t0, ADDR_DSPL
@@ -2313,7 +2303,7 @@ draw_2_second:
     sw $t6, 584($t0)
     sw $t6, 328($t0)
     sw $t6, 332($t0)
-    j game_loop
+    jr $ra
     
 draw_8_first:
     lw $t0, ADDR_DSPL
@@ -2331,7 +2321,7 @@ draw_8_first:
     sw $t6, 200($t0)
     sw $t6, 328($t0)
     sw $t6, 456($t0)
-    j game_loop
+    jr $ra
     
 draw_8_second:
     lw $t0, ADDR_DSPL
@@ -2350,7 +2340,7 @@ draw_8_second:
     sw $t6, 200($t0)
     sw $t6, 328($t0)
     sw $t6, 456($t0)
-    j game_loop
+    jr $ra
     
 draw_9_first:
     lw $t0, ADDR_DSPL
@@ -2366,8 +2356,8 @@ draw_9_first:
     sw $t6, 588($t0)
     sw $t6, 584($t0)
     sw $t6, 200($t0)
-    sw $t6, 456($t0)
-    j game_loop
+    sw $t6, 328($t0)
+    jr $ra
     
 draw_9_second:
     lw $t0, ADDR_DSPL
@@ -2384,8 +2374,8 @@ draw_9_second:
     sw $t6, 588($t0)
     sw $t6, 584($t0)
     sw $t6, 200($t0)
-    sw $t6, 456($t0)
-    j game_loop
+    sw $t6, 328($t0)
+    jr $ra
     
 draw_4_first:
     lw $t0, ADDR_DSPL
@@ -2399,7 +2389,7 @@ draw_4_first:
     sw $t6, 592($t0)
     sw $t6, 200($t0)
     sw $t6, 328($t0)
-    j game_loop
+    jr $ra
     
 draw_4_second:
     lw $t0, ADDR_DSPL
@@ -2414,7 +2404,7 @@ draw_4_second:
     sw $t6, 592($t0)
     sw $t6, 200($t0)
     sw $t6, 328($t0)
-    j game_loop
+    jr $ra
     
 draw_7_first:
     lw $t0, ADDR_DSPL
@@ -2426,7 +2416,7 @@ draw_7_first:
     sw $t6, 336($t0)
     sw $t6, 464($t0)
     sw $t6, 592($t0)
-    j game_loop
+    jr $ra
     
 draw_7_second:
     lw $t0, ADDR_DSPL
@@ -2439,9 +2429,77 @@ draw_7_second:
     sw $t6, 336($t0)
     sw $t6, 464($t0)
     sw $t6, 592($t0)
-    j game_loop
+    jr $ra
+    
+increase_score_ones:
+    lw $t0, ADDR_DSPL
+    addi $t0, $t0, 16
+    addi $t6, $zero, 0
+    sw $t6, 72($t0)
+    sw $t6, 76($t0)
+    sw $t6, 80($t0)
+    sw $t6, 208($t0)
+    sw $t6, 332($t0)
+    sw $t6, 336($t0)
+    sw $t6, 464($t0)
+    sw $t6, 592($t0)
+    sw $t6, 588($t0)
+    sw $t6, 584($t0)
+    sw $t6, 200($t0)
+    sw $t6, 328($t0)
+    sw $t6, 456($t0)
     
     
+    lw $t9, count
+    addi $t8, $zero, 10
+    div $t9, $t8
+    mflo $t9
+    mfhi $t8   
+    beq $t8, 0, draw_0_second
+    beq $t8, 1, draw_1_second
+    beq $t8, 2, draw_2_second
+    beq $t8, 3, draw_3_second
+    beq $t8, 4, draw_4_second
+    beq $t8, 5, draw_5_second
+    beq $t8, 6, draw_6_second
+    beq $t8, 7, draw_7_second
+    beq $t8, 8, draw_8_second
+    beq $t8, 9, draw_9_second
+    jr $ra
+    
+increase_score_tens:
+    lw $t0, ADDR_DSPL
+    addi $t6, $zero, 0
+    sw $t6, 72($t0)
+    sw $t6, 76($t0)
+    sw $t6, 80($t0)
+    sw $t6, 208($t0)
+    sw $t6, 332($t0)
+    sw $t6, 336($t0)
+    sw $t6, 464($t0)
+    sw $t6, 592($t0)
+    sw $t6, 588($t0)
+    sw $t6, 584($t0)
+    sw $t6, 200($t0)
+    sw $t6, 328($t0)
+    sw $t6, 456($t0)
+    
+    lw $t9, count
+    addi $t8, $zero, 10
+    div $t9, $t8
+    mflo $t9
+    mfhi $t8   
+    beq $t9, 0, draw_0_first
+    beq $t9, 1, draw_1_first
+    beq $t9, 2, draw_2_first
+    beq $t9, 3, draw_3_first
+    beq $t9, 4, draw_4_first
+    beq $t9, 5, draw_5_first
+    beq $t9, 6, draw_6_first
+    beq $t9, 7, draw_7_first
+    beq $t9, 8, draw_8_first
+    beq $t9, 9, draw_9_first
+    jr $ra
 
 Exit:
 li $v0, 10 # terminate the program gracefully
