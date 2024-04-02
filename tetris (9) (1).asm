@@ -1909,6 +1909,8 @@ game_over:
     sw $t6, 72($t0)
     sw $t6, 76($t0)
     sw $t6, 80($t0)
+    sw $t6, 204($t0)
+    sw $t6, 460($t0)
     sw $t6, 208($t0)
     sw $t6, 332($t0)
     sw $t6, 336($t0)
@@ -1926,6 +1928,8 @@ game_over:
     sw $t6, 72($t0)
     sw $t6, 76($t0)
     sw $t6, 80($t0)
+    sw $t6, 204($t0)
+    sw $t6, 460($t0)
     sw $t6, 208($t0)
     sw $t6, 332($t0)
     sw $t6, 336($t0)
@@ -2448,8 +2452,9 @@ increase_score_ones:
     sw $t6, 200($t0)
     sw $t6, 328($t0)
     sw $t6, 456($t0)
-    
-    
+    sw $t6, 204($t0)
+    sw $t6, 460($t0)
+       
     lw $t9, count
     addi $t8, $zero, 10
     div $t9, $t8
@@ -2473,6 +2478,8 @@ increase_score_tens:
     sw $t6, 72($t0)
     sw $t6, 76($t0)
     sw $t6, 80($t0)
+    sw $t6, 204($t0)
+    sw $t6, 460($t0)
     sw $t6, 208($t0)
     sw $t6, 332($t0)
     sw $t6, 336($t0)
