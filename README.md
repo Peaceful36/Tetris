@@ -1,1 +1,2 @@
-# csc258-project
+# Tetris
+Tetris game made with MIPS
